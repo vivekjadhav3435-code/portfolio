@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <style>
+        body {
+            font-family: Georgia, "Times New Roman", serif;
+        }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: rgb(0, 0, 33);
+            color: white;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 80px;
+            background-color: rgb(1, 1, 43);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul li {
+            list-style: none;
+            margin: 0 23px;
+            cursor: pointer;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+        }
+
+        nav ul li a:hover {
+            color: rgb(100, 100, 184);
+            font-size: 1.08rem;
+        }
+
+        main hr {
+            border: 0;
+            background: rgb(97, 76, 201);
+            height: 1.4px;
+            margin: 40px 84px;
+        }
+
+        .left {
+            font-size: 2rem;
+        }
+
+        .firstSection {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 75px 0;
+        }
+
+        .firstSection>div {
+            width: 30%;
+
+        }
+
+        .leftSection {
+            font-size: 2rem;
+        }
+
+        .rightSection img {
+            width: 80%;
+            background-color: rgb(0, 0, 33);
+        }
+
+        .purple {
+            color: rgb(147, 70, 220);
+        }
+
+        #element {
+            color: rgb(147, 70, 220);
+        }
+
+        .secondSection {
+            max-width: 80vw;
+            margin: auto;
+            height: 50vh;
+        }
+
+        .secondSection h1 {
+            font-size: 1.9rem;
+            color: #b7bd13;
+        }
+
+        .secondSection .box {
+            background: white;
+            width: 77vw;
+            height: 2px;
+            margin: 59px 0;
+            display: flex;
+        }
+
+        .secondSection .vertical {
+            background-color: white;
+            width: 1px;
+            height: 0px;
+            margin: -109px 120px;
+
+        }
+
+        .image-top {
+            width: 50px;
+            position: relative;
+            top: 51px;
+            left: -45px;
+        }
+
+        .vertical-title {
+            position: relative;
+            top: 75px;
+            width: 174px;
+            font-size: 1.3rem;
+        }
+
+        .vertical-desc {
+            position: relative;
+            top: 88px;
+            color: #ea7fc8;
+            width: 170px;
+            font-size: 13px;
+        }
+
+          .secondSectione {
+            max-width: 80vw;
+            margin: auto;
+            height: 50vh;
+        }
+
+        .secondSectione h1 {
+            font-size: 1.9rem;
+            color: #b7bd13;
+        }
+
+        .secondSectione .box {
+            background: white;
+            width: 77vw;
+            height: 2px;
+            margin: 59px 0;
+            display: flex;
+        }
+
+        .secondSectione .vertical {
+            background-color: white;
+            width: 1px;
+            height: 0px;
+            margin: -109px 120px;
+
+        }
+
+        .image-top {
+            width: 50px;
+            position: relative;
+            top: 51px;
+            left: -45px;
+        }
+
+        .vertical-title {
+            position: relative;
+            top: 80px;
+            width: 174px;
+            font-size: 1.3rem;
+        }
+
+        .vertical-desc {
+            position: relative;
+            top: 88px;
+            color: #ea7fc8;
+            width: 170px;
+            font-size: 13px;
+        }
+
+         /* RESUME */
+    .resume-bg {
+      background: var(--bg2);
+    }
+
+    .resume-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+    }
+
+    .resume-section h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: -140px;
+    }
+
+    .resume-section h3 i {
+      color: var(--accent);
+    }
+
+    .resume-item {
+      padding-left: 24px;
+      border-left: 1px solid var(--border);
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .resume-item::before {
+      content: '';
+      position: absolute;
+      left: -5px;
+      top: 8px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg2);
+    }
+
+    .resume-item h4 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .resume-item .org {
+      font-size: 0.85rem;
+      color: var(--accent2);
+      margin-bottom: 4px;
+    }
+
+    .resume-item .period {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .resume-item p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+        footer {
+            background-color: #30304b;
+            height: 200px;
+        }
+
+        * {
+
+            margin: 0px;
+            padding: 0;
+            left: -104px;
+        }
+
+        .footer {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="left">Vivekanand's Portfolio</div>
+            <div class="right">
+                <ul>
+                    <li> <a href="/">Home</a></li>
+                    <li> <a href="/">About Me</a></li>
+                    <li><a href="/">Projects</a></li>
+                    <li><a href="/">Contact Me</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <section class="firstSection"">
+           <div class=" leftSection">
+            Hi, My name is <span class="purple">Vivekanand</span>
+            <div>and I am a Passionate</div>
+            <div>IT Engineer</div>
+            <span id="element"></span>
+
+            </div>
+            <div class="rightSection">
+                <img src="sd04.png" alt="">
+
+            </div>
+        </section>
+        <hr>
+        <section class="secondSection">
+            <span class="text-gray">what i have done so far</span>
+            <h1>Certifications</h1>
+
+            <div class="box">
+                <div class="vertical">
+                    <img class="image-top" src="dev.png" alt="">
+                    <div class="vertical-title">
+                        Software Engineer
+                    </div>
+                    <div class="vertical-desc">
+                        <p>Worked on developing and maintaining web applications using modern technologies.</p>
+                    </div>
+                </div>
+                <div class="vertical">
+                    <img class="image-top" src="pyth logo.png" alt="">
+                    <div class="vertical-title">
+                        Python Essential 1
+                        <a href="PYTHON ESSENTIAL 1.pdf" target="_blank">View Certificate</a>
+                    </div>
+                    <div class="vertical-desc">
+                        <p>Built strong fundamentals of Python including syntax, data types, and basic programming
+                            concepts.</p>
+                    </div>
+                </div>
+                <div class="vertical">
+                    <img class="image-top" src="pyth logo.png" alt="">
+                    <div class="vertical-title">
+                        Python Essential 2
+                        <a href="PYTHON ESSENTIAL 2.pdf" target="_blank">View Certificate</a>
+                    </div>
+                    <div class="vertical-desc">
+                        <p>Gained intermediate Python skills with focus on OOP, modules, and problem-solving.</p>
+                    </div>
+                </div>
+                <div class="vertical">
+                    <img class="image-top" src="ai logo.png" alt="">
+                    <div class="vertical-title">
+                        NASSCOM (AI)
+
+                        <a href="NASSCOM (AI).pdf" target="_blank">View Certificate</a>
+                    </div>
+                    <div class="vertical-desc">
+                        <p>Developed industry-relevant skills aligned with current IT standards and professional
+                            practices.</p>
+                    </div>
+                </div>
+                <div class="vertical">
+                    <img class="image-top" src="datav logo.png" alt="">
+                    <div class="vertical-title">
+                        IBM SkillBuild
+                        <a href="data visualization certificate .pdf" target="_blank">View Certificate</a>
+                    </div>
+                    <div class="vertical-desc">
+                        <p>Learned practical tech skills with hands-on experience in modern tools and real-world
+                            applications.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="secondSectione" >
+            <span class="text-gray"> </span>
+            <h1>Projects</h1> 
+
+            <div class="box">
+                <div class="vertical">
+                    <img class="image-top" src="smartchemlab.png" alt="">
+                    <div class="vertical-title">
+                        Smart chemistry lab
+                         <a href="chemlab.html" target="_blank">View Website</a>
+                    </div>
+                    <div class="vertical-desc">
+                        <p> This is a project related to Design Thinking, an application where we can easily monitor all the chemistry lab tasks like experiments, attendence, teaching, etc. providing full course in a single app so the allover work gets easier.</p>
+                    </div>
+                </div>
+                <div class="vertical">
+                    <img class="image-top" src="truss.png" alt="">
+                    <div class="vertical-title">
+                        Truss(Bridge)
+                        <a href="trussss.jpg" target="_blank">View Image</a>
+                    </div>
+                    <div class="vertical-desc">
+                        <p>This is a project related to Applied mechanics, where we have designed a truss bridge using the icecream sticks and we have calculated the forces acting on each member of the truss using the method of joints and method of sections.</p>
+                    </div>
+                </div>
+                <div class="vertical">
+                    <img class="image-top" src="projectle.png" alt="">
+                    <div class="vertical-title">
+                        Projectile(Cannon)
+                        <a href="projectileeee.png" target="_blank">View Image</a>
+                    </div>
+                    <div class="vertical-desc">
+                        <p>This is a project related to Applied mechanics, where we have to design a projectile using waste or anything to study the concept practically. As it was a group task,so to promote teamwork as well.</p>
+                    </div>
+                </div>
+                <div class="vertical">
+                    <img class="image-top" src="" alt="">
+                    <div class="vertical-title">
+                        
+
+                        <a href="" target="_blank"> </a>
+                    </div>
+                    <div class="vertical-desc">
+                        <p> </p>
+                    </div>
+                </div>
+                <div class="vertical">
+                    <img class="image-top" src="" alt="">
+                    <div class="vertical-title">
+                        
+                        <a href="" target="_blank"> </a>
+                    </div>
+                    <div class="vertical-desc">
+                        <p> </p>
+                    </div>
+                </div>
+            </div>
+
+
+        </section>
+
+         <!-- RESUME -->
+  <section id="resume" class="resume-bg">
+    <div class="section-header reveal">
+      <p class="section-tag">My Journey</p>
+      <h2 class="section-title">Resume</h2>
+      <div class="divider"></div>
+      <a href="https://canva.link/4muzasr537y5jz2" class="btn btn-primary" style="margin-top:16px;display:inline-flex;"><i class="fas fa-download"></i>
+        Download Resume</a>
+    </div>
+    <div class="resume-grid">
+      <div class="resume-section reveal">
+        <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+        <div class="resume-item">
+          <h4>BTech - Information Technology</h4>
+          <div class="org">MIT Academy of Engineering (MITAOE), Alandi, Pune.</div>
+          <div class="period">sept 2025 – Present</div>
+          <p>First-year IT student at MITAOE with foundational knowledge of Python, C programming, and SQL.
+</p>
+        </div>
+        <div class="resume-item">
+          <h4>HSC – Science (PCM)</h4>
+          <div class="org">L.N.H.V junior college,Jamkhed</div>
+          <div class="period">2023 – 2025</div>
+          <p>Scored 70.05% in board exams.</p>
+        </div>
+        <div class="resume-item">
+          <h4>SSC -(SEMI-SCIENCE)</h4>
+          <div class="org">Pandit Jawaharlal Neheru Vidyalaya Ashti.</div>
+          <div class="period">Jan 2021 – May 2023</div>
+          <p>Scored 93.20% in board exams.</p>
+        </div>
+      </div>
+      <div class="resume-section reveal">
+        <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+        <div class="resume-item">
+          <h4>B.Tech – Computer Engineering</h4>
+          <div class="org">PICT, Pune University</div>
+          <div class="period">2018 – 2022</div>
+          <p>Graduated with Distinction (CGPA 9.1). Led college tech fest. Published paper on distributed caching.</p>
+        </div>
+        <div class="resume-item">
+          <h4>HSC – Science (PCM)</h4>
+          <div class="org">JPS College, Pune</div>
+          <div class="period">2016 – 2018</div>
+          <p>Scored 94.2% in board exams. State-level coding olympiad winner.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+    </main>
+    <footer>
+        <div class="footer">
+            <div class="footer-first">
+                <h3>Vivekanand's portfolio</h3>
+            </div>
+            <div class="footer-second"></div>
+            <div class="footer-third"></div>
+            <div class="footer-fourth"></div>
+        </div>
+    </footer>
+
+
+    <script src="https://unpkg.com/typed.js@3.0.0/dist/typed.umd.js"></script>
+    <!-- Setup and start animation! -->
+    <script>
+        var typed = new Typed('#element', {
+            strings: ['<i>Web</i> developer', '<i>software</i> engineer', '<i>programmer</i>', '<i>coder</i>', 'web designer', 'video editor'],
+            typeSpeed: 50,
+        });
+    </script>
+</body>
+
+</html>

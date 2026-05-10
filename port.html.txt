@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aditya Pathade | Portfolio</title>
+  <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Georgia&display=swap)" rel="stylesheet">
+  <style>
+    /* Basic reset and font */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+      font-family: 'Georgia', serif;
+    }
+
+    body {
+      background-color: #f8f8f8;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav {
+      margin-top: 15px;
+    }
+
+    nav a {
+      color: #fff;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #00bcd4;
+    }
+
+    section {
+      padding: 80px 20px;
+      max-width: 1000px;
+      margin: auto;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
+    }
+
+    section.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      color: #222;
+      font-size: 2em;
+      position: relative;
+    }
+
+    h2::after {
+      content: '';
+      width: 80px;
+      height: 4px;
+      background: #00bcd4;
+      display: block;
+      margin: 10px auto;
+      border-radius: 2px;
+    }
+
+    .about p, .contact p {
+      max-width: 700px;
+      margin: auto;
+      text-align: center;
+      font-size: 1.1em;
+    }
+
+    .projects, .certificates {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 45%;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .contact form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    input, textarea {
+      width: 80%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #00bcd4;
+    }
+
+    button {
+      padding: 10px 30px;
+      border: none;
+      background: #00bcd4;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0288a3;
+    }
+
+    footer {
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+
+    .links a {
+      color: #00bcd4;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Aditya Pathade</h1>
+  <p>Computer Science Student | Python Developer | Web Developer</p>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#about">About Me</a>
+    <a href="#certificates">Certificates</a>
+    <a href="#projects">Projects</a>
+    <a href="#resume">Resume</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section id="home" class="show">
+  <h2>Welcome</h2>
+  <p style="text-align:center;">Hi, I'm Aditya Pathade — a Computer Science student passionate about coding, creating efficient web applications, and solving real-world problems.</p>
+</section>
+
+<section id="about">
+  <h2>About Me</h2>
+  <div class="about">
+    <p>
+      I'm a Computer Science student skilled in Python, C, HTML, CSS, MySQL, and Git.  
+      I have hands-on experience developing full-stack web apps using Flask and MySQL.  
+      I enjoy building efficient systems and improving user experience.
+    </p>
+  </div>
+</section>
+
+<section id="certificates">
+  <h2>Certificates & Achievements</h2>
+  <div class="certificates">
+    <div class="card">
+      <h3>Python Course</h3>
+      <p>Online Learning Platform (Jan 2023 - Mar 2023)</p>
+    </div>
+    <div class="card">
+      <h3>Nasscom Certificate</h3>
+      <p>Coursera (Apr 2026)</p>
+    </div>
+    <div class="card">
+      <h3>Cisco Certificate</h3>
+      <p>Online AI Course (Feb 2026)</p>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <h2>Projects</h2>
+  <div class="projects">
+    <div class="card">
+      <h3>Library App for MIT AOE</h3>
+      <p>Developed a full-stack web app using Flask & MySQL with features such as user authentication, database management, and improved data retrieval efficiency.</p>
+    </div>
+    <div class="card">
+      <h3>Student Management System</h3>
+      <p>Built a Python-based system to manage student records, designed for fast operations and structured data handling.</p>
+    </div>
+  </div>
+</section>
+
+<section id="resume">
+  <h2>Resume</h2>
+  <p style="text-align:center;">Download my latest resume here:</p>
+  <p style="text-align:center;"><a href="#" style="color:#00bcd4; font-weight:bold;">Download Resume (PDF)</a></p>
+</section>
+
+<section id="contact">
+  <h2>Contact Me</h2>
+  <div class="contact">
+    <p>Email: adityapathade1201@gmail.com</p>
+    <p>Phone: 8080595880</p>
+    <p>Location: Pune, India - 214105</p>
+
+    <div class="links">
+      <a href="[github.com](https://github.com/adityapathade)" target="_blank">GitHub</a> |
+      <a href="[linkedin.com](https://linkedin.com/in/sample-link)" target="_blank">LinkedIn</a>
+    </div>
+
+    <form>
+      <input type="text" placeholder="Your Name" required>
+      <input type="email" placeholder="Your Email" required>
+      <textarea rows="4" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Aditya Pathade | All Rights Reserved</p>
+</footer>
+
+<script>
+  // Scroll animation
+  const sections = document.querySelectorAll("section");
+  window.addEventListener("scroll", () => {
+    const trigger = window.innerHeight * 0.8;
+    sections.forEach(section => {
+      const top = section.getBoundingClientRect().top;
+      if (top < trigger) {
+        section.classList.add("show");
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

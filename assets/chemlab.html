@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ChemLab Pro — Laboratory Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #07090f;
+  --surface: #0d1220;
+  --card: #111827;
+  --card2: #161f35;
+  --border: #1e2d4a;
+  --accent: #00e5c0;
+  --accent2: #6366f1;
+  --accent3: #f59e0b;
+  --danger: #ef4444;
+  --success: #22c55e;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --muted2: #94a3b8;
+  --sidebar-w: 260px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow:hidden}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+
+/* ─── LAYOUT ─── */
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* ─── SIDEBAR ─── */
+.sidebar{
+  width:var(--sidebar-w);min-width:var(--sidebar-w);
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  overflow:hidden;position:relative;
+  transition:width .3s;
+  z-index:100;
+}
+.sidebar::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:200px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(0,229,192,.08),transparent 70%);
+  pointer-events:none;
+}
+.logo{
+  padding:20px 20px 16px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;flex-shrink:0;
+}
+.logo-icon{
+  width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+  box-shadow:0 0 20px rgba(0,229,192,.3);
+}
+.logo-text{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;letter-spacing:.05em;line-height:1.3}
+.logo-sub{font-size:10px;color:var(--muted);letter-spacing:.08em;font-family:'JetBrains Mono',monospace}
+
+.nav{flex:1;overflow-y:auto;padding:12px 0}
+.nav-section{padding:8px 20px 4px;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 20px;cursor:pointer;
+  color:var(--muted2);font-size:13.5px;font-weight:500;
+  transition:all .2s;position:relative;
+  border-left:3px solid transparent;
+}
+.nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.nav-item.active{
+  background:linear-gradient(90deg,rgba(0,229,192,.1),transparent);
+  color:var(--accent);
+  border-left-color:var(--accent);
+}
+.nav-item .icon{font-size:17px;width:22px;text-align:center;flex-shrink:0}
+.nav-badge{
+  margin-left:auto;background:var(--accent);color:#000;
+  font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;
+  font-family:'JetBrains Mono',monospace;
+}
+.nav-badge.warn{background:var(--accent3)}
+.nav-badge.danger{background:var(--danger)}
+
+.sidebar-footer{
+  padding:14px 20px;border-top:1px solid var(--border);flex-shrink:0;
+  background:var(--surface);
+}
+.user-card{display:flex;align-items:center;gap:10px}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#a855f7);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.user-name{font-size:13px;font-weight:600}
+.user-role{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+
+/* ─── MAIN ─── */
+.main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.topbar{
+  height:58px;flex-shrink:0;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:16px;padding:0 24px;
+}
+.topbar-title{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:600;letter-spacing:.05em}
+.topbar-sub{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-left:2px}
+.spacer{flex:1}
+.topbar-search{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:7px 14px;font-size:13px;color:var(--text);
+  font-family:'DM Sans',sans-serif;width:220px;outline:none;
+  transition:border-color .2s;
+}
+.topbar-search:focus{border-color:var(--accent)}
+.topbar-search::placeholder{color:var(--muted)}
+.topbar-btn{
+  width:36px;height:36px;border-radius:8px;border:1px solid var(--border);
+  background:var(--card);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:16px;transition:all .2s;position:relative;
+}
+.topbar-btn:hover{border-color:var(--accent);color:var(--accent)}
+.notif-dot{
+  position:absolute;top:6px;right:6px;width:7px;height:7px;
+  background:var(--danger);border-radius:50%;border:2px solid var(--surface);
+}
+
+.content{flex:1;overflow-y:auto;padding:24px}
+
+/* ─── PAGE ─── */
+.page{display:none}
+.page.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── STAT CARDS ─── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:20px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s;cursor:default;
+}
+.stat-card:hover{transform:translateY(-2px);border-color:var(--accent)}
+.stat-card::after{
+  content:'';position:absolute;top:-30px;right:-20px;
+  width:80px;height:80px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,229,192,.12),transparent);
+}
+.stat-icon{font-size:22px;margin-bottom:10px}
+.stat-val{font-family:'Orbitron',sans-serif;font-size:26px;font-weight:700;color:var(--accent);line-height:1}
+.stat-label{font-size:12px;color:var(--muted);margin-top:6px;font-family:'JetBrains Mono',monospace;letter-spacing:.04em}
+.stat-change{font-size:11px;margin-top:8px}
+.stat-change.up{color:var(--success)}
+.stat-change.down{color:var(--danger)}
+
+/* ─── GRID ─── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr}}
+
+/* ─── PANEL ─── */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px}
+.panel-head{
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.panel-title{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--accent)}
+.panel-body{padding:20px}
+
+/* ─── BUTTONS ─── */
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;
+  cursor:pointer;border:none;transition:all .2s;font-family:'DM Sans',sans-serif;
+  text-decoration:none;
+}
+.btn-primary{background:var(--accent);color:#000}
+.btn-primary:hover{background:#00ffcc;box-shadow:0 0 20px rgba(0,229,192,.4)}
+.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:rgba(239,68,68,.15);color:var(--danger);border:1px solid rgba(239,68,68,.3)}
+.btn-danger:hover{background:rgba(239,68,68,.25)}
+.btn-sm{padding:5px 12px;font-size:12px;border-radius:6px}
+.btn-purchase{background:linear-gradient(135deg,var(--accent2),#a855f7);color:#fff}
+.btn-purchase:hover{box-shadow:0 0 20px rgba(99,102,241,.4);transform:scale(1.03)}
+.btn-warn{background:rgba(245,158,11,.15);color:var(--accent3);border:1px solid rgba(245,158,11,.3)}
+
+/* ─── TABLE ─── */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{padding:10px 14px;text-align:left;background:var(--card2);color:var(--muted);font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:.06em;border-bottom:1px solid var(--border)}
+.tbl td{padding:11px 14px;border-bottom:1px solid rgba(30,45,74,.6);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(255,255,255,.02)}
+.tbl .mono{font-family:'JetBrains Mono',monospace;font-size:12px}
+
+/* ─── BADGES ─── */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace}
+.badge-green{background:rgba(34,197,94,.15);color:var(--success);border:1px solid rgba(34,197,94,.25)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--danger);border:1px solid rgba(239,68,68,.25)}
+.badge-yellow{background:rgba(245,158,11,.15);color:var(--accent3);border:1px solid rgba(245,158,11,.25)}
+.badge-blue{background:rgba(99,102,241,.15);color:#818cf8;border:1px solid rgba(99,102,241,.25)}
+.badge-cyan{background:rgba(0,229,192,.12);color:var(--accent);border:1px solid rgba(0,229,192,.25)}
+
+/* ─── FORM ─── */
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--muted2);margin-bottom:7px;letter-spacing:.04em}
+.form-input,.form-select,.form-textarea{
+  width:100%;background:var(--card2);border:1px solid var(--border);
+  border-radius:8px;padding:9px 14px;font-size:13.5px;color:var(--text);
+  font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,229,192,.08)}
+.form-textarea{resize:vertical;min-height:90px}
+.form-select option{background:var(--card)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ─── PROGRESS BAR ─── */
+.progress-bar{background:var(--card2);border-radius:20px;height:7px;overflow:hidden}
+.progress-fill{height:100%;border-radius:20px;transition:width .5s ease;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.progress-fill.low{background:linear-gradient(90deg,var(--danger),#f97316)}
+.progress-fill.med{background:linear-gradient(90deg,var(--accent3),#f59e0b)}
+
+/* ─── ATTENDANCE ─── */
+.att-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.att-card{
+  background:var(--card2);border:1px solid var(--border);border-radius:10px;
+  padding:12px;text-align:center;cursor:pointer;transition:all .2s;position:relative;
+}
+.att-card:hover{border-color:var(--accent)}
+.att-card.present{border-color:var(--success);background:rgba(34,197,94,.07)}
+.att-card.absent{border-color:var(--danger);background:rgba(239,68,68,.07)}
+.att-card.late{border-color:var(--accent3);background:rgba(245,158,11,.07)}
+.att-avatar{width:40px;height:40px;border-radius:50%;margin:0 auto 8px;font-size:16px;display:flex;align-items:center;justify-content:center;background:var(--card);font-weight:700}
+.att-name{font-size:12px;font-weight:600;margin-bottom:6px}
+.att-roll{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:8px}
+.att-btns{display:flex;gap:4px;justify-content:center}
+.att-btn{width:26px;height:26px;border-radius:6px;border:none;cursor:pointer;font-size:12px;transition:all .2s;font-weight:700}
+.att-btn.p{background:rgba(34,197,94,.2);color:var(--success)}
+.att-btn.p:hover{background:rgba(34,197,94,.4)}
+.att-btn.a{background:rgba(239,68,68,.2);color:var(--danger)}
+.att-btn.a:hover{background:rgba(239,68,68,.4)}
+.att-btn.l{background:rgba(245,158,11,.2);color:var(--accent3)}
+.att-btn.l:hover{background:rgba(245,158,11,.4)}
+
+/* ─── EXPERIMENT CARDS ─── */
+.exp-card{
+  background:var(--card2);border:1px solid var(--border);border-radius:12px;
+  padding:18px;transition:all .2s;cursor:pointer;
+  display:flex;flex-direction:column;gap:10px;
+}
+.exp-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,229,192,.08)}
+.exp-num{font-family:'Orbitron',monospace;font-size:11px;color:var(--muted);letter-spacing:.1em}
+.exp-title{font-size:15px;font-weight:600;line-height:1.3}
+.exp-desc{font-size:12.5px;color:var(--muted2);line-height:1.6}
+.exp-tags{display:flex;flex-wrap:wrap;gap:5px}
+
+/* ─── RESOURCE CARDS ─── */
+.res-card{
+  background:var(--card2);border:1px solid var(--border);border-radius:12px;
+  padding:16px;display:flex;gap:14px;align-items:flex-start;
+  transition:all .2s;cursor:pointer;
+}
+.res-card:hover{border-color:var(--accent2)}
+.res-icon-box{width:44px;height:44px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px}
+.res-info{flex:1}
+.res-name{font-weight:600;font-size:14px;margin-bottom:4px}
+.res-meta{font-size:11.5px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+
+/* ─── INVENTORY CARDS ─── */
+.inv-card{
+  background:var(--card2);border:1px solid var(--border);border-radius:12px;
+  padding:18px;transition:all .2s;
+}
+.inv-card:hover{border-color:var(--border)}
+.inv-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.inv-name{font-weight:600;font-size:14px}
+.inv-code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
+.inv-qty{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:700}
+.inv-qty.low{color:var(--danger)}
+.inv-qty.med{color:var(--accent3)}
+.inv-qty.ok{color:var(--success)}
+.inv-unit{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-left:4px}
+.inv-progress{margin:10px 0 14px}
+.inv-foot{display:flex;align-items:center;justify-content:space-between}
+
+/* ─── GUIDE CARDS ─── */
+.guide-section{margin-bottom:24px}
+.guide-section-title{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;padding:6px 14px;border-radius:6px;display:inline-flex;align-items:center;gap:8px;margin-bottom:14px}
+.guide-section-title.dos{background:rgba(34,197,94,.15);color:var(--success)}
+.guide-section-title.donts{background:rgba(239,68,68,.15);color:var(--danger)}
+.guide-section-title.emergency{background:rgba(245,158,11,.15);color:var(--accent3)}
+.guide-item{
+  display:flex;align-items:flex-start;gap:12px;
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:10px;padding:14px 16px;margin-bottom:8px;
+  transition:all .2s;
+}
+.guide-item:hover{transform:translateX(4px)}
+.guide-item.do{border-left:3px solid var(--success)}
+.guide-item.dont{border-left:3px solid var(--danger)}
+.guide-item.info{border-left:3px solid var(--accent3)}
+.guide-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.guide-dot.do{background:rgba(34,197,94,.2);color:var(--success)}
+.guide-dot.dont{background:rgba(239,68,68,.2);color:var(--danger)}
+.guide-dot.info{background:rgba(245,158,11,.2);color:var(--accent3)}
+.guide-text{font-size:13.5px;line-height:1.6}
+.guide-text strong{font-weight:600}
+
+/* ─── PURCHASE MODAL ─── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
+  z-index:1000;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal{
+  background:var(--card);border:1px solid var(--border);border-radius:18px;
+  width:460px;max-width:95vw;max-height:90vh;overflow-y:auto;
+  transform:scale(.94) translateY(20px);transition:all .25s;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+.modal-overlay.open .modal{transform:scale(1) translateY(0)}
+.modal-head{
+  padding:20px 24px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-title{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700;letter-spacing:.06em;color:var(--accent)}
+.modal-close{width:30px;height:30px;border-radius:7px;background:var(--card2);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .2s}
+.modal-close:hover{border-color:var(--danger);color:var(--danger)}
+.modal-body{padding:24px}
+
+/* ─── TEACHING ─── */
+.lesson-card{
+  background:var(--card2);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;transition:all .2s;cursor:pointer;
+}
+.lesson-card:hover{border-color:var(--accent2);transform:translateY(-2px)}
+.lesson-thumb{height:100px;display:flex;align-items:center;justify-content:center;font-size:38px;position:relative;overflow:hidden}
+.lesson-thumb::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.3)}
+.lesson-info{padding:14px}
+.lesson-title{font-weight:600;font-size:14px;margin-bottom:6px}
+.lesson-meta{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.lesson-progress-wrap{margin-top:10px}
+
+/* ─── DASHBOARD ACTIVITY ─── */
+.activity-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px 0;border-bottom:1px solid rgba(30,45,74,.5);
+}
+.activity-item:last-child{border-bottom:none}
+.activity-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.activity-text{font-size:13px;line-height:1.5}
+.activity-time{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:2px}
+
+/* ─── TABS ─── */
+.tabs{display:flex;gap:4px;background:var(--card2);border-radius:10px;padding:4px;margin-bottom:20px;width:fit-content}
+.tab{padding:7px 16px;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;color:var(--muted2)}
+.tab.active{background:var(--accent);color:#000;font-weight:700}
+.tab:hover:not(.active){color:var(--text)}
+
+/* ─── CHART BARS ─── */
+.chart-bars{display:flex;align-items:flex-end;gap:8px;height:120px;padding-top:10px}
+.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.chart-bar{width:100%;border-radius:6px 6px 0 0;transition:height .8s ease;cursor:pointer;min-height:4px}
+.chart-bar:hover{filter:brightness(1.2)}
+.chart-bar-label{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.chart-bar-val{font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace}
+
+/* ─── NOTIFICATIONS ─── */
+.notif-panel{
+  position:absolute;top:54px;right:16px;width:320px;
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  box-shadow:0 20px 50px rgba(0,0,0,.4);z-index:200;
+  display:none;overflow:hidden;
+}
+.notif-panel.open{display:block;animation:fadeIn .2s}
+.notif-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.notif-title{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em}
+.notif-item{padding:12px 18px;border-bottom:1px solid rgba(30,45,74,.5);display:flex;gap:10px;align-items:flex-start}
+.notif-item:last-child{border-bottom:none}
+.notif-dot2{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.notif-msg{font-size:12.5px;line-height:1.5}
+.notif-t{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:2px}
+
+/* ─── WELCOME BANNER ─── */
+.welcome-banner{
+  background:linear-gradient(135deg,rgba(0,229,192,.1),rgba(99,102,241,.1));
+  border:1px solid rgba(0,229,192,.2);border-radius:16px;
+  padding:24px 28px;margin-bottom:24px;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+}
+.welcome-banner::before{
+  content:'⚗️';position:absolute;right:28px;top:50%;transform:translateY(-50%);
+  font-size:70px;opacity:.15;
+}
+.welcome-banner h2{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:700;margin-bottom:6px}
+.welcome-banner p{font-size:13.5px;color:var(--muted2);max-width:500px;line-height:1.6}
+
+/* ─── PAGE HEADER ─── */
+.page-header{margin-bottom:24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.page-title{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:700;margin-bottom:4px}
+.page-subtitle{font-size:13px;color:var(--muted2);font-family:'JetBrains Mono',monospace}
+
+/* ─── MISC ─── */
+.divider{height:1px;background:var(--border);margin:16px 0}
+.tag{padding:3px 8px;border-radius:5px;font-size:10.5px;font-family:'JetBrains Mono',monospace;font-weight:600;background:var(--card);border:1px solid var(--border);color:var(--muted2)}
+.glow-text{color:var(--accent);text-shadow:0 0 20px rgba(0,229,192,.4)}
+.inline-flex{display:inline-flex;align-items:center;gap:8px}
+.mt-4{margin-top:16px} .mt-2{margin-top:8px} .mb-2{margin-bottom:8px} .mb-3{margin-bottom:12px}
+.flex{display:flex;align-items:center} .flex-between{justify-content:space-between} .gap-2{gap:8px} .gap-3{gap:12px}
+.text-muted{color:var(--muted)} .text-sm{font-size:12px} .font-mono{font-family:'JetBrains Mono',monospace}
+.fw-600{font-weight:600}
+.exp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:4px}
+.lesson-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.res-grid{display:flex;flex-direction:column;gap:10px}
+.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+
+.order-history{margin-top:16px}
+.order-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(30,45,74,.4)}
+.order-row:last-child{border-bottom:none}
+
+.info-box{background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--muted2);line-height:1.7;margin-bottom:16px}
+.success-box{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--muted2);line-height:1.7;margin-bottom:16px;display:none}
+.success-box.show{display:block}
+
+/* animation for purchase confirm */
+@keyframes popIn{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+.confirm-anim{animation:popIn .4s ease}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ═══════════════════════ SIDEBAR ═══════════════════════ -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">⚗️</div>
+    <div>
+      <div class="logo-text">ChemLab Pro</div>
+      <div class="logo-sub">v2.0 · MGMT SYSTEM</div>
+    </div>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">Overview</div>
+    <div class="nav-item active" onclick="goto('dashboard')">
+      <span class="icon">🏠</span> Dashboard
+    </div>
+
+    <div class="nav-section">Academic</div>
+    <div class="nav-item" onclick="goto('attendance')">
+      <span class="icon">📋</span> Attendance
+      <span class="nav-badge">42</span>
+    </div>
+    <div class="nav-item" onclick="goto('experiments')">
+      <span class="icon">🔬</span> Experiments
+    </div>
+    <div class="nav-item" onclick="goto('teaching')">
+      <span class="icon">📚</span> Teaching
+    </div>
+    <div class="nav-item" onclick="goto('resources')">
+      <span class="icon">📁</span> Resources
+    </div>
+
+    <div class="nav-section">Safety</div>
+    <div class="nav-item" onclick="goto('guidelines')">
+      <span class="icon">🛡️</span> Guidelines
+    </div>
+
+    <div class="nav-section">Inventory</div>
+    <div class="nav-item" onclick="goto('equipment')">
+      <span class="icon">🔭</span> Equipment
+      <span class="nav-badge warn">3</span>
+    </div>
+    <div class="nav-item" onclick="goto('chemicals')">
+      <span class="icon">🧪</span> Chemicals
+      <span class="nav-badge danger">2</span>
+    </div>
+    <div class="nav-item" onclick="goto('orders')">
+      <span class="icon">🛒</span> Orders
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="avatar">DV</div>
+      <div>
+        <div class="user-name">Dr. Vivekanand</div>
+        <div class="user-role">Lab Incharge</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════════════════ MAIN ═══════════════════════ -->
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="topbar-title">DASHBOARD</div>
+      <div class="topbar-sub" id="topbar-sub">Welcome back, Doctor</div>
+    </div>
+    <div class="spacer"></div>
+    <input class="topbar-search" placeholder="🔍  Search anything…" oninput="handleSearch(this.value)"/>
+    <div class="topbar-btn" onclick="toggleNotif()" id="notif-btn">
+      🔔<span class="notif-dot"></span>
+    </div>
+    <div class="topbar-btn" title="Settings">⚙️</div>
+
+    <!-- Notification Panel -->
+    <div class="notif-panel" id="notif-panel">
+      <div class="notif-head">
+        <span class="notif-title">NOTIFICATIONS</span>
+        <span class="text-sm text-muted">4 new</span>
+      </div>
+      <div class="notif-item">
+        <div class="notif-dot2" style="background:var(--danger)"></div>
+        <div><div class="notif-msg">⚠️ Hydrochloric Acid stock critically low (2 bottles)</div><div class="notif-t">2 min ago</div></div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-dot2" style="background:var(--accent3)"></div>
+        <div><div class="notif-msg">🔭 3 equipment items need restocking</div><div class="notif-t">18 min ago</div></div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-dot2" style="background:var(--success)"></div>
+        <div><div class="notif-msg">✅ Order #ORD-0042 delivered successfully</div><div class="notif-t">1 hour ago</div></div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-dot2" style="background:var(--accent2)"></div>
+        <div><div class="notif-msg">📋 Attendance for Batch B not marked yet</div><div class="notif-t">3 hours ago</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content" id="content">
+
+<!-- ═══════ DASHBOARD ═══════ -->
+<div class="page active" id="page-dashboard">
+  <div class="welcome-banner">
+    <div>
+      <h2>Good Morning, Dr. Vivekanand 👋</h2>
+      <p>Today's lab sessions are scheduled. 3 inventory alerts need your attention. Batch A experiment report submission deadline is tomorrow.</p>
+      <div style="margin-top:14px;display:flex;gap:10px">
+        <button class="btn btn-primary btn-sm" onclick="goto('attendance')">Mark Attendance</button>
+        <button class="btn btn-secondary btn-sm" onclick="goto('equipment')">Check Inventory</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">👨‍🎓</div>
+      <div class="stat-val">127</div>
+      <div class="stat-label">Total Students</div>
+      <div class="stat-change up">↑ 12 new this semester</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📋</div>
+      <div class="stat-val">94%</div>
+      <div class="stat-label">Avg Attendance</div>
+      <div class="stat-change up">↑ 3% from last month</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🔬</div>
+      <div class="stat-val">18</div>
+      <div class="stat-label">Experiments Active</div>
+      <div class="stat-change up">↑ 2 added this week</div>
+    </div>
+    <div class="stat-card" style="border-color:rgba(245,158,11,.3)">
+      <div class="stat-icon">⚠️</div>
+      <div class="stat-val" style="color:var(--accent3)">5</div>
+      <div class="stat-label">Low Stock Alerts</div>
+      <div class="stat-change down">↓ Immediate action needed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🛒</div>
+      <div class="stat-val">₹48K</div>
+      <div class="stat-label">Monthly Budget</div>
+      <div class="stat-change up">₹12K remaining</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📚</div>
+      <div class="stat-val">34</div>
+      <div class="stat-label">Resources Uploaded</div>
+      <div class="stat-change up">↑ 6 this week</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Attendance Chart -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">📊 WEEKLY ATTENDANCE</span>
+        <span class="badge badge-cyan">This Week</span>
+      </div>
+      <div class="panel-body">
+        <div class="chart-bars" id="att-chart"></div>
+        <div style="display:flex;gap:16px;margin-top:14px">
+          <span style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:3px;display:inline-block"></span>Present</span>
+          <span style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:rgba(239,68,68,.6);border-radius:3px;display:inline-block"></span>Absent</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">⚡ RECENT ACTIVITY</span>
+        <span class="badge badge-blue">Live</span>
+      </div>
+      <div class="panel-body" style="padding:16px 20px">
+        <div class="activity-item">
+          <div class="activity-icon" style="background:rgba(34,197,94,.15);color:var(--success)">✅</div>
+          <div><div class="activity-text">Experiment #7 <strong>Acid-Base Titration</strong> completed by Batch A</div><div class="activity-time">10 min ago</div></div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon" style="background:rgba(99,102,241,.15);color:#818cf8">📤</div>
+          <div><div class="activity-text">Lab Manual Ch.4 uploaded to <strong>Resources</strong></div><div class="activity-time">1 hour ago</div></div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon" style="background:rgba(245,158,11,.15);color:var(--accent3)">🛒</div>
+          <div><div class="activity-text">Purchase order <strong>#ORD-0043</strong> placed for Beakers (50ml)</div><div class="activity-time">2 hours ago</div></div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon" style="background:rgba(239,68,68,.15);color:var(--danger)">⚠️</div>
+          <div><div class="activity-text"><strong>HCl stock</strong> critically low — restocking required</div><div class="activity-time">3 hours ago</div></div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon" style="background:rgba(0,229,192,.1);color:var(--accent)">📋</div>
+          <div><div class="activity-text">Attendance marked for <strong>Batch C</strong> — 38/42 present</div><div class="activity-time">Yesterday</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Low Stock -->
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-title">🚨 CRITICAL STOCK ALERTS</span>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary btn-sm" onclick="goto('equipment')">View All</button>
+        <button class="btn btn-purchase btn-sm" onclick="openPurchaseModal('HCl','chemical')">Purchase Now</button>
+      </div>
+    </div>
+    <div class="panel-body" style="padding:0">
+      <table class="tbl">
+        <thead><tr><th>Item</th><th>Type</th><th>Remaining</th><th>Min Required</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td class="fw-600">Hydrochloric Acid</td><td><span class="badge badge-blue">Chemical</span></td><td class="mono" style="color:var(--danger)">2 bottles</td><td class="mono">10 bottles</td><td><span class="badge badge-red">Critical</span></td><td><button class="btn btn-purchase btn-sm" onclick="openPurchaseModal('Hydrochloric Acid','chemical')">🛒 Purchase</button></td></tr>
+          <tr><td class="fw-600">Sodium Hydroxide</td><td><span class="badge badge-blue">Chemical</span></td><td class="mono" style="color:var(--danger)">150g</td><td class="mono">500g</td><td><span class="badge badge-red">Critical</span></td><td><button class="btn btn-purchase btn-sm" onclick="openPurchaseModal('Sodium Hydroxide','chemical')">🛒 Purchase</button></td></tr>
+          <tr><td class="fw-600">Burette (25ml)</td><td><span class="badge badge-cyan">Equipment</span></td><td class="mono" style="color:var(--accent3)">3 pcs</td><td class="mono">12 pcs</td><td><span class="badge badge-yellow">Low</span></td><td><button class="btn btn-purchase btn-sm" onclick="openPurchaseModal('Burette 25ml','equipment')">🛒 Purchase</button></td></tr>
+          <tr><td class="fw-600">Litmus Paper</td><td><span class="badge badge-blue">Chemical</span></td><td class="mono" style="color:var(--accent3)">1 pack</td><td class="mono">5 packs</td><td><span class="badge badge-yellow">Low</span></td><td><button class="btn btn-purchase btn-sm" onclick="openPurchaseModal('Litmus Paper','equipment')">🛒 Purchase</button></td></tr>
+          <tr><td class="fw-600">Conical Flask (250ml)</td><td><span class="badge badge-cyan">Equipment</span></td><td class="mono" style="color:var(--accent3)">5 pcs</td><td class="mono">20 pcs</td><td><span class="badge badge-yellow">Low</span></td><td><button class="btn btn-purchase btn-sm" onclick="openPurchaseModal('Conical Flask 250ml','equipment')">🛒 Purchase</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ ATTENDANCE ═══════ -->
+<div class="page" id="page-attendance">
+  <div class="page-header">
+    <div>
+      <div class="page-title">📋 Attendance Management</div>
+      <div class="page-subtitle">Mark & track student attendance · Tap P/A/L to mark</div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <select class="form-select" style="width:150px;padding:8px 12px">
+        <option>Batch A (42)</option>
+        <option>Batch B (40)</option>
+        <option>Batch C (45)</option>
+      </select>
+      <input type="date" class="form-input" id="att-date" style="width:160px;padding:8px 12px"/>
+      <button class="btn btn-primary" onclick="saveAttendance()">💾 Save</button>
+      <button class="btn btn-secondary" onclick="exportAttendance()">📥 Export</button>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="panel" style="margin-bottom:0">
+      <div class="panel-head"><span class="panel-title">TODAY'S SUMMARY</span></div>
+      <div class="panel-body" style="display:flex;gap:24px">
+        <div style="text-align:center"><div style="font-family:'Orbitron',sans-serif;font-size:28px;font-weight:700;color:var(--success)" id="att-p-count">0</div><div class="text-sm text-muted font-mono">Present</div></div>
+        <div style="text-align:center"><div style="font-family:'Orbitron',sans-serif;font-size:28px;font-weight:700;color:var(--danger)" id="att-a-count">0</div><div class="text-sm text-muted font-mono">Absent</div></div>
+        <div style="text-align:center"><div style="font-family:'Orbitron',sans-serif;font-size:28px;font-weight:700;color:var(--accent3)" id="att-l-count">0</div><div class="text-sm text-muted font-mono">Late</div></div>
+        <div style="text-align:center"><div style="font-family:'Orbitron',sans-serif;font-size:28px;font-weight:700;color:var(--accent)" id="att-pct">0%</div><div class="text-sm text-muted font-mono">Rate</div></div>
+      </div>
+    </div>
+    <div class="panel" style="margin-bottom:0">
+      <div class="panel-head"><span class="panel-title">MONTHLY OVERVIEW</span></div>
+      <div class="panel-body">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div><div class="flex flex-between mb-2"><span class="text-sm">Batch A</span><span class="text-sm font-mono">96%</span></div><div class="progress-bar"><div class="progress-fill" style="width:96%"></div></div></div>
+          <div><div class="flex flex-between mb-2"><span class="text-sm">Batch B</span><span class="text-sm font-mono">91%</span></div><div class="progress-bar"><div class="progress-fill" style="width:91%"></div></div></div>
+          <div><div class="flex flex-between mb-2"><span class="text-sm">Batch C</span><span class="text-sm font-mono">88%</span></div><div class="progress-bar"><div class="progress-fill med" style="width:88%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><span class="panel-title">BATCH A — 42 STUDENTS</span><span class="badge badge-cyan" id="att-date-display"></span></div>
+    <div class="panel-body">
+      <div class="att-grid" id="att-grid"></div>
+    </div>
+  </div>
+
+  <!-- Attendance History -->
+  <div class="panel">
+    <div class="panel-head"><span class="panel-title">ATTENDANCE HISTORY</span></div>
+    <div class="panel-body" style="padding:0">
+      <table class="tbl">
+        <thead><tr><th>Date</th><th>Batch</th><th>Present</th><th>Absent</th><th>Late</th><th>Rate</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">Apr 25, 2026</td><td>Batch A</td><td class="mono" style="color:var(--success)">40</td><td class="mono" style="color:var(--danger)">1</td><td class="mono" style="color:var(--accent3)">1</td><td class="mono">97.6%</td><td><span class="badge badge-green">Marked</span></td></tr>
+          <tr><td class="mono">Apr 24, 2026</td><td>Batch B</td><td class="mono" style="color:var(--success)">37</td><td class="mono" style="color:var(--danger)">2</td><td class="mono" style="color:var(--accent3)">1</td><td class="mono">92.5%</td><td><span class="badge badge-green">Marked</span></td></tr>
+          <tr><td class="mono">Apr 23, 2026</td><td>Batch C</td><td class="mono" style="color:var(--success)">39</td><td class="mono" style="color:var(--danger)">5</td><td class="mono" style="color:var(--accent3)">1</td><td class="mono">86.7%</td><td><span class="badge badge-green">Marked</span></td></tr>
+          <tr><td class="mono">Apr 22, 2026</td><td>Batch A</td><td class="mono" style="color:var(--success)">41</td><td class="mono" style="color:var(--danger)">0</td><td class="mono" style="color:var(--accent3)">1</td><td class="mono">100%</td><td><span class="badge badge-green">Marked</span></td></tr>
+          <tr><td class="mono">Apr 21, 2026</td><td>Batch B</td><td colspan="4" class="mono text-muted">Not marked yet</td><td><span class="badge badge-red">Pending</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ EXPERIMENTS ═══════ -->
+<div class="page" id="page-experiments">
+  <div class="page-header">
+    <div>
+      <div class="page-title">🔬 Experiments</div>
+      <div class="page-subtitle">Lab experiments · Reports · Procedures</div>
+    </div>
+    <button class="btn btn-primary" onclick="showAddExp()">＋ Add Experiment</button>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(this,'exp')">All (18)</div>
+    <div class="tab" onclick="switchTab(this,'exp')">Organic (6)</div>
+    <div class="tab" onclick="switchTab(this,'exp')">Inorganic (7)</div>
+    <div class="tab" onclick="switchTab(this,'exp')">Physical (5)</div>
+  </div>
+
+  <div class="exp-grid" id="exp-grid"></div>
+
+  <!-- Add Experiment Panel (hidden by default) -->
+  <div class="panel" id="add-exp-panel" style="display:none;margin-top:20px">
+    <div class="panel-head"><span class="panel-title">➕ NEW EXPERIMENT</span><button class="btn btn-secondary btn-sm" onclick="document.getElementById('add-exp-panel').style.display='none'">Cancel</button></div>
+    <div class="panel-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Experiment Number</label><input class="form-input" placeholder="e.g. EXP-019" /></div>
+        <div class="form-group"><label class="form-label">Category</label><select class="form-select"><option>Organic</option><option>Inorganic</option><option>Physical</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Title</label><input class="form-input" placeholder="Experiment title" /></div>
+      <div class="form-group"><label class="form-label">Aim / Objective</label><textarea class="form-textarea" placeholder="State the aim of this experiment…"></textarea></div>
+      <div class="form-group"><label class="form-label">Materials Required</label><textarea class="form-textarea" placeholder="List chemicals and equipment…" style="min-height:70px"></textarea></div>
+      <div class="form-group"><label class="form-label">Procedure</label><textarea class="form-textarea" placeholder="Step-by-step procedure…"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Assigned Batch</label><select class="form-select"><option>Batch A</option><option>Batch B</option><option>Batch C</option><option>All Batches</option></select></div>
+        <div class="form-group"><label class="form-label">Submission Deadline</label><input class="form-input" type="date"/></div>
+      </div>
+      <button class="btn btn-primary" onclick="addExperiment()">✓ Add Experiment</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ TEACHING ═══════ -->
+<div class="page" id="page-teaching">
+  <div class="page-header">
+    <div>
+      <div class="page-title">📚 Teaching Hub</div>
+      <div class="page-subtitle">Lessons · Topics · Curriculum management</div>
+    </div>
+    <button class="btn btn-primary">＋ Add Lesson</button>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="stat-card"><div class="stat-icon">📖</div><div class="stat-val">24</div><div class="stat-label">Total Lessons</div></div>
+    <div class="stat-card"><div class="stat-icon">🎯</div><div class="stat-val">71%</div><div class="stat-label">Curriculum Covered</div></div>
+  </div>
+
+  <div class="panel" style="margin-bottom:20px">
+    <div class="panel-head"><span class="panel-title">📈 CURRICULUM PROGRESS</span></div>
+    <div class="panel-body">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div><div class="flex flex-between mb-2"><span class="fw-600">Unit 1 · Atomic Structure & Periodic Table</span><span class="font-mono text-sm" style="color:var(--success)">100%</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div></div>
+        <div><div class="flex flex-between mb-2"><span class="fw-600">Unit 2 · Chemical Bonding</span><span class="font-mono text-sm" style="color:var(--success)">100%</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div></div>
+        <div><div class="flex flex-between mb-2"><span class="fw-600">Unit 3 · Acids, Bases & Salts</span><span class="font-mono text-sm" style="color:var(--accent3)">78%</span></div><div class="progress-bar"><div class="progress-fill med" style="width:78%"></div></div></div>
+        <div><div class="flex flex-between mb-2"><span class="fw-600">Unit 4 · Organic Chemistry Basics</span><span class="font-mono text-sm" style="color:var(--accent3)">45%</span></div><div class="progress-bar"><div class="progress-fill med" style="width:45%"></div></div></div>
+        <div><div class="flex flex-between mb-2"><span class="fw-600">Unit 5 · Electrochemistry</span><span class="font-mono text-sm" style="color:var(--danger)">10%</span></div><div class="progress-bar"><div class="progress-fill low" style="width:10%"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><span class="panel-title">🎬 LESSON MODULES</span></div>
+    <div class="panel-body">
+      <div class="lesson-grid" id="lesson-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ RESOURCES ═══════ -->
+<div class="page" id="page-resources">
+  <div class="page-header">
+    <div>
+      <div class="page-title">📁 Resources</div>
+      <div class="page-subtitle">Notes · Exercises · Reference Materials</div>
+    </div>
+    <button class="btn btn-primary">📤 Upload Resource</button>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(this,'res')">All</div>
+    <div class="tab" onclick="switchTab(this,'res')">Notes</div>
+    <div class="tab" onclick="switchTab(this,'res')">Exercises</div>
+    <div class="tab" onclick="switchTab(this,'res')">Reference</div>
+    <div class="tab" onclick="switchTab(this,'res')">Videos</div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:11px;color:var(--muted);letter-spacing:.1em;margin-bottom:12px">📄 DOCUMENTS & NOTES</div>
+      <div class="res-grid" id="res-grid"></div>
+    </div>
+    <div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:11px;color:var(--muted);letter-spacing:.1em;margin-bottom:12px">📊 STORAGE USAGE</div>
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-body">
+          <div style="text-align:center;margin-bottom:16px">
+            <div style="font-family:'Orbitron',sans-serif;font-size:30px;font-weight:700;color:var(--accent)">2.4 GB</div>
+            <div class="text-sm text-muted font-mono">of 10 GB used</div>
+          </div>
+          <div class="progress-bar" style="height:10px"><div class="progress-fill" style="width:24%"></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+            <div style="background:var(--card2);border-radius:8px;padding:10px;text-align:center"><div class="font-mono" style="font-size:13px;color:var(--accent)">1.1 GB</div><div class="text-sm text-muted">Notes & Docs</div></div>
+            <div style="background:var(--card2);border-radius:8px;padding:10px;text-align:center"><div class="font-mono" style="font-size:13px;color:var(--accent2)">1.3 GB</div><div class="text-sm text-muted">Videos</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title">🕒 RECENT UPLOADS</span></div>
+        <div class="panel-body" style="padding:12px 20px">
+          <div class="activity-item" style="padding:8px 0"><div class="activity-icon" style="background:rgba(239,68,68,.15);color:var(--danger)">📕</div><div><div class="activity-text">Organic Chemistry Notes — Chapter 4</div><div class="activity-time">Today · 1.2 MB</div></div></div>
+          <div class="activity-item" style="padding:8px 0"><div class="activity-icon" style="background:rgba(34,197,94,.15);color:var(--success)">📗</div><div><div class="activity-text">Acid-Base Exercise Set 3</div><div class="activity-time">Yesterday · 340 KB</div></div></div>
+          <div class="activity-item" style="padding:8px 0"><div class="activity-icon" style="background:rgba(245,158,11,.15);color:var(--accent3)">📙</div><div><div class="activity-text">Periodic Table Reference Sheet</div><div class="activity-time">2 days ago · 890 KB</div></div></div>
+          <div class="activity-item" style="padding:8px 0"><div class="activity-icon" style="background:rgba(99,102,241,.15);color:#818cf8">🎬</div><div><div class="activity-text">Lab Safety Video — 2024 Edition</div><div class="activity-time">3 days ago · 124 MB</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ GUIDELINES ═══════ -->
+<div class="page" id="page-guidelines">
+  <div class="page-header">
+    <div>
+      <div class="page-title">🛡️ Lab Safety Guidelines</div>
+      <div class="page-subtitle">Mandatory safety rules · Emergency procedures</div>
+    </div>
+    <button class="btn btn-secondary">🖨️ Print Guidelines</button>
+  </div>
+
+  <div class="info-box show" style="background:rgba(0,229,192,.06);border-color:rgba(0,229,192,.2)">
+    ⚠️ <strong style="color:var(--accent)">Mandatory Reading:</strong> All students and staff must read and follow these guidelines before entering the chemistry laboratory. Non-compliance may result in injury or disciplinary action.
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="guide-section">
+        <div class="guide-section-title dos">✅ DO'S — Safe Practices</div>
+        <div class="guide-item do"><div class="guide-dot do">✓</div><div class="guide-text"><strong>Always wear PPE:</strong> Safety goggles, lab coat, and gloves must be worn at all times when handling chemicals.</div></div>
+        <div class="guide-item do"><div class="guide-dot do">✓</div><div class="guide-text"><strong>Label everything:</strong> All containers must be clearly labeled with chemical name, concentration, and date.</div></div>
+        <div class="guide-item do"><div class="guide-dot do">✓</div><div class="guide-text"><strong>Know exit routes:</strong> Familiarize yourself with all emergency exits and fire extinguisher locations before beginning work.</div></div>
+        <div class="guide-item do"><div class="guide-dot do">✓</div><div class="guide-text"><strong>Wash hands thoroughly</strong> before and after all lab work, even if gloves were worn throughout.</div></div>
+        <div class="guide-item do"><div class="guide-dot do">✓</div><div class="guide-text"><strong>Report all accidents</strong> immediately to the lab incharge, no matter how minor they may seem.</div></div>
+        <div class="guide-item do"><div class="guide-dot do">✓</div><div class="guide-text"><strong>Work in small groups</strong> of 2-4 students and always have a partner present during experiments.</div></div>
+        <div class="guide-item do"><div class="guide-dot do">✓</div><div class="guide-text"><strong>Dispose chemicals properly</strong> by following the waste disposal chart posted near every sink.</div></div>
+        <div class="guide-item do"><div class="guide-dot do">✓</div><div class="guide-text"><strong>Keep the workspace clean:</strong> Wipe surfaces before and after use. Return all equipment to designated storage.</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="guide-section">
+        <div class="guide-section-title donts">❌ DON'TS — Prohibited Actions</div>
+        <div class="guide-item dont"><div class="guide-dot dont">✗</div><div class="guide-text"><strong>Never eat or drink</strong> in the laboratory — even water. This is a strict, non-negotiable rule.</div></div>
+        <div class="guide-item dont"><div class="guide-dot dont">✗</div><div class="guide-text"><strong>Do not smell chemicals directly.</strong> Use the wafting technique to detect odors from a safe distance.</div></div>
+        <div class="guide-item dont"><div class="guide-dot dont">✗</div><div class="guide-text"><strong>Never pipette by mouth.</strong> Always use a pipette pump or bulb. Mouth pipetting is strictly prohibited.</div></div>
+        <div class="guide-item dont"><div class="guide-dot dont">✗</div><div class="guide-text"><strong>Do not mix unknown chemicals.</strong> Only mix chemicals as instructed in the experiment protocol.</div></div>
+        <div class="guide-item dont"><div class="guide-dot dont">✗</div><div class="guide-text"><strong>No mobile phones</strong> during active experiments. Distraction is a leading cause of lab accidents.</div></div>
+        <div class="guide-item dont"><div class="guide-dot dont">✗</div><div class="guide-text"><strong>Never run or rush</strong> in the laboratory. Sudden movements near chemicals or glassware are dangerous.</div></div>
+        <div class="guide-item dont"><div class="guide-dot dont">✗</div><div class="guide-text"><strong>Do not touch eyes</strong> after handling chemicals, even with gloves. Always wash hands first.</div></div>
+        <div class="guide-item dont"><div class="guide-dot dont">✗</div><div class="guide-text"><strong>Never work alone</strong> in the laboratory. At least two people must be present at all times.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="guide-section">
+    <div class="guide-section-title emergency">🚨 EMERGENCY PROCEDURES</div>
+    <div class="grid-3">
+      <div class="guide-item info"><div class="guide-dot info">🔥</div><div class="guide-text"><strong>Chemical Fire:</strong> Use CO₂ extinguisher. Never use water on chemical fires. Evacuate immediately and call 101.</div></div>
+      <div class="guide-item info"><div class="guide-dot info">🧴</div><div class="guide-text"><strong>Chemical Spill on Skin:</strong> Flush with large amounts of water for 15 minutes. Remove contaminated clothing. Seek medical attention.</div></div>
+      <div class="guide-item info"><div class="guide-dot info">👁️</div><div class="guide-text"><strong>Eye Exposure:</strong> Use emergency eye wash station immediately. Flush eyes for 15 minutes. Do NOT rub eyes.</div></div>
+      <div class="guide-item info"><div class="guide-dot info">🌬️</div><div class="guide-text"><strong>Gas Leak / Fumes:</strong> Evacuate immediately. Turn off all gas valves. Open windows. Do not use electrical switches.</div></div>
+      <div class="guide-item info"><div class="guide-dot info">🩺</div><div class="guide-text"><strong>Injury / Cuts from Glass:</strong> Do not remove glass. Apply pressure. Inform lab incharge immediately for first aid.</div></div>
+      <div class="guide-item info"><div class="guide-dot info">📞</div><div class="guide-text"><strong>Emergency Contacts:</strong> Lab Incharge: <strong>+91 98765 43210</strong> · Ambulance: <strong>108</strong> · Fire: <strong>101</strong> · Poison Control: <strong>1800-116-117</strong></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ EQUIPMENT ═══════ -->
+<div class="page" id="page-equipment">
+  <div class="page-header">
+    <div>
+      <div class="page-title">🔭 Equipment Inventory</div>
+      <div class="page-subtitle">Track · Monitor · Restock laboratory equipment</div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-secondary">📊 Generate Report</button>
+      <button class="btn btn-purchase" onclick="openPurchaseModal('','equipment')">🛒 Purchase Equipment</button>
+    </div>
+  </div>
+
+  <div class="stats-grid" style="margin-bottom:20px">
+    <div class="stat-card"><div class="stat-icon">🔭</div><div class="stat-val">47</div><div class="stat-label">Total Items</div></div>
+    <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" style="color:var(--success)">38</div><div class="stat-label">Adequate Stock</div></div>
+    <div class="stat-card"><div class="stat-icon">⚠️</div><div class="stat-val" style="color:var(--accent3)">6</div><div class="stat-label">Low Stock</div></div>
+    <div class="stat-card"><div class="stat-icon">🚨</div><div class="stat-val" style="color:var(--danger)">3</div><div class="stat-label">Critical / Out</div></div>
+  </div>
+
+  <div class="inv-grid" id="equip-grid"></div>
+</div>
+
+<!-- ═══════ CHEMICALS ═══════ -->
+<div class="page" id="page-chemicals">
+  <div class="page-header">
+    <div>
+      <div class="page-title">🧪 Chemical Inventory</div>
+      <div class="page-subtitle">Track hazardous & non-hazardous chemicals · Safety compliance</div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-secondary">📋 Safety Sheets</button>
+      <button class="btn btn-purchase" onclick="openPurchaseModal('','chemical')">🛒 Purchase Chemicals</button>
+    </div>
+  </div>
+
+  <div class="stats-grid" style="margin-bottom:20px">
+    <div class="stat-card"><div class="stat-icon">🧪</div><div class="stat-val">63</div><div class="stat-label">Chemical Types</div></div>
+    <div class="stat-card"><div class="stat-icon">☣️</div><div class="stat-val">12</div><div class="stat-label">Hazardous</div></div>
+    <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" style="color:var(--success)">49</div><div class="stat-label">Adequate Stock</div></div>
+    <div class="stat-card"><div class="stat-icon">🚨</div><div class="stat-val" style="color:var(--danger)">2</div><div class="stat-label">Critical</div></div>
+  </div>
+
+  <div class="inv-grid" id="chem-grid"></div>
+</div>
+
+<!-- ═══════ ORDERS ═══════ -->
+<div class="page" id="page-orders">
+  <div class="page-header">
+    <div>
+      <div class="page-title">🛒 Purchase Orders</div>
+      <div class="page-subtitle">Track all procurement · Order history</div>
+    </div>
+    <button class="btn btn-purchase" onclick="openPurchaseModal('','equipment')">＋ New Order</button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon">📦</div><div class="stat-val">43</div><div class="stat-label">Total Orders</div></div>
+    <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-val" style="color:var(--accent3)">3</div><div class="stat-label">Pending Delivery</div></div>
+    <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" style="color:var(--success)">38</div><div class="stat-label">Delivered</div></div>
+    <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-val">₹2.4L</div><div class="stat-label">Total Spent (FY)</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><span class="panel-title">ORDER HISTORY</span></div>
+    <div class="panel-body" style="padding:0">
+      <table class="tbl">
+        <thead><tr><th>Order ID</th><th>Item</th><th>Type</th><th>Qty</th><th>Amount</th><th>Ordered On</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="orders-table">
+          <tr><td class="mono">#ORD-0043</td><td class="fw-600">Beakers (50ml)</td><td><span class="badge badge-cyan">Equipment</span></td><td class="mono">24 pcs</td><td class="mono">₹3,600</td><td class="mono">Apr 26, 2026</td><td><span class="badge badge-yellow">Pending</span></td><td><button class="btn btn-secondary btn-sm">Track</button></td></tr>
+          <tr><td class="mono">#ORD-0042</td><td class="fw-600">Sulphuric Acid 98%</td><td><span class="badge badge-blue">Chemical</span></td><td class="mono">5L</td><td class="mono">₹8,500</td><td class="mono">Apr 24, 2026</td><td><span class="badge badge-green">Delivered</span></td><td><button class="btn btn-secondary btn-sm">Invoice</button></td></tr>
+          <tr><td class="mono">#ORD-0041</td><td class="fw-600">Burette (50ml)</td><td><span class="badge badge-cyan">Equipment</span></td><td class="mono">6 pcs</td><td class="mono">₹4,200</td><td class="mono">Apr 20, 2026</td><td><span class="badge badge-green">Delivered</span></td><td><button class="btn btn-secondary btn-sm">Invoice</button></td></tr>
+          <tr><td class="mono">#ORD-0040</td><td class="fw-600">Conical Flask 250ml</td><td><span class="badge badge-cyan">Equipment</span></td><td class="mono">18 pcs</td><td class="mono">₹2,700</td><td class="mono">Apr 15, 2026</td><td><span class="badge badge-green">Delivered</span></td><td><button class="btn btn-secondary btn-sm">Invoice</button></td></tr>
+          <tr><td class="mono">#ORD-0039</td><td class="fw-600">Sodium Hydroxide</td><td><span class="badge badge-blue">Chemical</span></td><td class="mono">2 kg</td><td class="mono">₹1,200</td><td class="mono">Apr 10, 2026</td><td><span class="badge badge-green">Delivered</span></td><td><button class="btn btn-secondary btn-sm">Invoice</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+  </div><!-- /content -->
+</main>
+
+<!-- ═══════════════════════ PURCHASE MODAL ═══════════════════════ -->
+<div class="modal-overlay" id="purchase-modal" onclick="closePurchaseOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="modal-title">🛒 PURCHASE ORDER</span>
+      <div class="modal-close" onclick="closePurchase()">✕</div>
+    </div>
+    <div class="modal-body">
+      <div id="purchase-success" class="success-box">
+        <div class="confirm-anim" style="text-align:center;padding:10px 0">
+          <div style="font-size:48px;margin-bottom:8px">✅</div>
+          <div style="font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700;color:var(--success);margin-bottom:8px">ORDER PLACED SUCCESSFULLY!</div>
+          <div style="font-size:13px;color:var(--muted2)">Your purchase order has been submitted. Order ID: <span id="order-id" class="font-mono" style="color:var(--accent)"></span></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:8px">Estimated delivery: 3–5 working days</div>
+          <button class="btn btn-primary" style="margin-top:16px" onclick="closePurchase()">Done</button>
+        </div>
+      </div>
+      <div id="purchase-form">
+        <div class="form-group">
+          <label class="form-label">Item Name</label>
+          <input class="form-input" id="purchase-item" placeholder="Enter item name"/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-select" id="purchase-type">
+              <option value="equipment">Equipment / Glassware</option>
+              <option value="chemical">Chemical / Reagent</option>
+              <option value="consumable">Consumable / Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Quantity</label>
+            <input class="form-input" id="purchase-qty" placeholder="e.g. 12 pcs, 2 kg"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Estimated Cost (₹)</label>
+            <input class="form-input" id="purchase-cost" placeholder="e.g. 2500" type="number"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Priority</label>
+            <select class="form-select" id="purchase-priority">
+              <option>🚨 Urgent (next 24h)</option>
+              <option>⚡ High (2-3 days)</option>
+              <option>📦 Normal (5-7 days)</option>
+              <option>🗓️ Planned (next month)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Supplier / Vendor (optional)</label>
+          <input class="form-input" id="purchase-vendor" placeholder="e.g. Merck, Himedia, Fisher Scientific"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Reason / Justification</label>
+          <textarea class="form-textarea" id="purchase-reason" placeholder="Why is this purchase needed?" style="min-height:70px"></textarea>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:4px">
+          <button class="btn btn-purchase" style="flex:1" onclick="submitPurchase()">🛒 Submit Purchase Order</button>
+          <button class="btn btn-secondary" onclick="closePurchase()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ═══════════════════════ DATA ═══════════════════════
+const students = [
+  {id:'A01',name:'Aarav Shah',emoji:'👦'},
+  {id:'A02',name:'Ananya Mishra',emoji:'👧'},
+  {id:'A03',name:'Aryan Gupta',emoji:'👦'},
+  {id:'A04',name:'Bhavna Patel',emoji:'👧'},
+  {id:'A05',name:'Chetan Rao',emoji:'👦'},
+  {id:'A06',name:'Divya Iyer',emoji:'👧'},
+  {id:'A07',name:'Eshan Nair',emoji:'👦'},
+  {id:'A08',name:'Fiza Khan',emoji:'👧'},
+  {id:'A09',name:'Gaurav Singh',emoji:'👦'},
+  {id:'A10',name:'Harini Reddy',emoji:'👧'},
+  {id:'A11',name:'Ishaan Verma',emoji:'👦'},
+  {id:'A12',name:'Jhanvi Mehta',emoji:'👧'},
+  {id:'A13',name:'Karan Desai',emoji:'👦'},
+  {id:'A14',name:'Lavanya Sharma',emoji:'👧'},
+  {id:'A15',name:'Manav Joshi',emoji:'👦'},
+  {id:'A16',name:'Nisha Agarwal',emoji:'👧'},
+  {id:'A17',name:'Omkar Kulkarni',emoji:'👦'},
+  {id:'A18',name:'Priya Bansal',emoji:'👧'},
+  {id:'A19',name:'Rahul Saxena',emoji:'👦'},
+  {id:'A20',name:'Shreya Malhotra',emoji:'👧'},
+  {id:'A21',name:'Tanmay Bhatt',emoji:'👦'},
+  {id:'A22',name:'Urvashi Tiwari',emoji:'👧'},
+  {id:'A23',name:'Varun Pandey',emoji:'👦'},
+  {id:'A24',name:'Wanessa D\'Souza',emoji:'👧'},
+];
+const attState = {};
+students.forEach(s => attState[s.id] = 'unmarked');
+
+const experiments = [
+  {num:'EXP-001',title:'Acid-Base Titration',desc:'Determine the concentration of NaOH using standard HCl solution. Learn endpoint detection using phenolphthalein indicator.',cat:'Inorganic',status:'completed',batch:'All'},
+  {num:'EXP-002',title:'Electrolysis of Water',desc:'Decompose water into hydrogen and oxygen using direct current. Calculate moles of gas produced.',cat:'Physical',status:'completed',batch:'Batch A'},
+  {num:'EXP-003',title:'Preparation of Soap',desc:'Saponification reaction using vegetable oil and NaOH. Understand ester hydrolysis in alkaline medium.',cat:'Organic',status:'active',batch:'Batch B'},
+  {num:'EXP-004',title:'Paper Chromatography',desc:'Separate plant pigments using paper chromatography. Calculate Rf values and identify pigments.',cat:'Organic',status:'active',batch:'All'},
+  {num:'EXP-005',title:'Flame Test for Metal Ions',desc:'Identify metal ions by characteristic flame colors. Observe emission spectra of Na, K, Ca, Cu, Li.',cat:'Inorganic',status:'active',batch:'Batch C'},
+  {num:'EXP-006',title:'pH Measurement of Solutions',desc:'Measure pH of various household and lab solutions using pH meter and indicators.',cat:'Physical',status:'upcoming',batch:'All'},
+  {num:'EXP-007',title:'Esterification Reaction',desc:'Synthesize ethyl acetate from ethanol and acetic acid using H₂SO₄ as catalyst. Characterize the product.',cat:'Organic',status:'upcoming',batch:'Batch A'},
+  {num:'EXP-008',title:'Qualitative Analysis — Anions',desc:'Systematic identification of anions (Cl⁻, SO₄²⁻, NO₃⁻, CO₃²⁻) using precipitation and gas tests.',cat:'Inorganic',status:'upcoming',batch:'Batch B'},
+  {num:'EXP-009',title:'Determination of Melting Point',desc:'Determine the melting point of organic compounds and assess purity using a capillary tube method.',cat:'Physical',status:'active',batch:'All'},
+];
+
+const equipment = [
+  {code:'EQ-001',name:'Burette (25ml)',qty:3,max:12,unit:'pcs',status:'critical',img:'🧫'},
+  {code:'EQ-002',name:'Burette (50ml)',qty:8,max:12,unit:'pcs',status:'ok',img:'🔬'},
+  {code:'EQ-003',name:'Conical Flask 250ml',qty:5,max:20,unit:'pcs',status:'low',img:'⚗️'},
+  {code:'EQ-004',name:'Beaker 100ml',qty:22,max:30,unit:'pcs',status:'ok',img:'🧪'},
+  {code:'EQ-005',name:'Beaker 250ml',qty:16,max:30,unit:'pcs',status:'ok',img:'🧪'},
+  {code:'EQ-006',name:'Pipette 10ml',qty:7,max:15,unit:'pcs',status:'low',img:'🔭'},
+  {code:'EQ-007',name:'Measuring Cylinder',qty:2,max:10,unit:'pcs',status:'critical',img:'📏'},
+  {code:'EQ-008',name:'Bunsen Burner',qty:12,max:14,unit:'pcs',status:'ok',img:'🔥'},
+  {code:'EQ-009',name:'Test Tubes',qty:80,max:100,unit:'pcs',status:'ok',img:'🧫'},
+  {code:'EQ-010',name:'Watch Glass',qty:10,max:20,unit:'pcs',status:'low',img:'🔍'},
+  {code:'EQ-011',name:'Spatula (Steel)',qty:18,max:20,unit:'pcs',status:'ok',img:'🍴'},
+  {code:'EQ-012',name:'Retort Stand',qty:0,max:8,unit:'pcs',status:'critical',img:'🏗️'},
+];
+
+const chemicals = [
+  {code:'CH-001',name:'Hydrochloric Acid 35%',qty:2,max:10,unit:'bottles',status:'critical',hazard:'corrosive',formula:'HCl'},
+  {code:'CH-002',name:'Sodium Hydroxide',qty:150,max:500,unit:'g',status:'critical',hazard:'corrosive',formula:'NaOH'},
+  {code:'CH-003',name:'Sulphuric Acid 98%',qty:3,max:5,unit:'L',status:'ok',hazard:'corrosive',formula:'H₂SO₄'},
+  {code:'CH-004',name:'Ethanol 95%',qty:4,max:6,unit:'L',status:'low',hazard:'flammable',formula:'C₂H₅OH'},
+  {code:'CH-005',name:'Phenolphthalein Solution',qty:200,max:300,unit:'ml',status:'ok',hazard:'none',formula:'C₂₀H₁₄O₄'},
+  {code:'CH-006',name:'Litmus Paper (Red)',qty:1,max:5,unit:'packs',status:'low',hazard:'none',formula:'—'},
+  {code:'CH-007',name:'Copper Sulphate',qty:300,max:400,unit:'g',status:'ok',hazard:'irritant',formula:'CuSO₄'},
+  {code:'CH-008',name:'Potassium Permanganate',qty:180,max:200,unit:'g',status:'ok',hazard:'oxidiser',formula:'KMnO₄'},
+  {code:'CH-009',name:'Acetic Acid (Glacial)',qty:500,max:1000,unit:'ml',status:'low',hazard:'corrosive',formula:'CH₃COOH'},
+  {code:'CH-010',name:'Calcium Carbonate',qty:1200,max:1000,unit:'g',status:'ok',hazard:'none',formula:'CaCO₃'},
+  {code:'CH-011',name:'Iodine Solution',qty:250,max:400,unit:'ml',status:'ok',hazard:'irritant',formula:'I₂'},
+  {code:'CH-012',name:'Ammonium Chloride',qty:800,max:800,unit:'g',status:'ok',hazard:'irritant',formula:'NH₄Cl'},
+];
+
+const lessons = [
+  {title:'Atomic Structure',unit:'Unit 1',color:'linear-gradient(135deg,#6366f1,#a855f7)',icon:'⚛️',duration:'45 min',progress:100,status:'done'},
+  {title:'Periodic Table Trends',unit:'Unit 1',color:'linear-gradient(135deg,#06b6d4,#6366f1)',icon:'📊',duration:'60 min',progress:100,status:'done'},
+  {title:'Chemical Bonding',unit:'Unit 2',color:'linear-gradient(135deg,#00e5c0,#06b6d4)',icon:'🔗',duration:'75 min',progress:100,status:'done'},
+  {title:'Acids & Bases Theory',unit:'Unit 3',color:'linear-gradient(135deg,#f59e0b,#ef4444)',icon:'⚗️',duration:'55 min',progress:78,status:'active'},
+  {title:'Salt Formation & pH',unit:'Unit 3',color:'linear-gradient(135deg,#22c55e,#06b6d4)',icon:'🧪',duration:'50 min',progress:40,status:'active'},
+  {title:'Organic Chemistry Intro',unit:'Unit 4',color:'linear-gradient(135deg,#a855f7,#ec4899)',icon:'🌱',duration:'65 min',progress:20,status:'active'},
+  {title:'Hydrocarbons',unit:'Unit 4',color:'linear-gradient(135deg,#f97316,#f59e0b)',icon:'⛽',duration:'60 min',progress:0,status:'upcoming'},
+  {title:'Electrochemistry',unit:'Unit 5',color:'linear-gradient(135deg,#6366f1,#06b6d4)',icon:'⚡',duration:'70 min',progress:0,status:'upcoming'},
+];
+
+const resources = [
+  {name:'Organic Chemistry Notes — Chapter 4',type:'PDF',size:'1.2 MB',uploaded:'Today',color:'#ef4444',icon:'📕',category:'Notes'},
+  {name:'Acid-Base Exercise Set 3',type:'PDF',size:'340 KB',uploaded:'Yesterday',color:'#22c55e',icon:'📗',category:'Exercises'},
+  {name:'Periodic Table Reference Sheet',type:'PDF',size:'890 KB',uploaded:'2 days ago',color:'#f59e0b',icon:'📙',category:'Reference'},
+  {name:'Lab Safety Manual 2025–26',type:'PDF',size:'2.1 MB',uploaded:'Last week',color:'#6366f1',icon:'📘',category:'Reference'},
+  {name:'Titration Practice Problems — Set 1',type:'DOCX',size:'220 KB',uploaded:'Apr 20',color:'#00e5c0',icon:'📄',category:'Exercises'},
+  {name:'Chemical Bonding Worksheet',type:'PDF',size:'580 KB',uploaded:'Apr 18',color:'#a855f7',icon:'📋',category:'Exercises'},
+  {name:'IUPAC Nomenclature Guide',type:'PDF',size:'1.8 MB',uploaded:'Apr 15',color:'#f97316',icon:'📓',category:'Reference'},
+  {name:'Inorganic Reactions Summary',type:'PDF',size:'750 KB',uploaded:'Apr 10',color:'#06b6d4',icon:'📃',category:'Notes'},
+];
+
+const attChartData = [
+  {day:'Mon',p:40,a:2},{day:'Tue',p:42,a:0},{day:'Wed',p:38,a:4},{day:'Thu',p:41,a:1},{day:'Fri',p:39,a:3}
+];
+
+let orderCounter = 44;
+
+// ═══════════════════════ NAVIGATION ═══════════════════════
+const pageTitles = {
+  dashboard:{title:'DASHBOARD',sub:'Welcome back, Doctor'},
+  attendance:{title:'ATTENDANCE',sub:'Track student presence'},
+  experiments:{title:'EXPERIMENTS',sub:'Lab protocols & reports'},
+  teaching:{title:'TEACHING HUB',sub:'Lessons & curriculum'},
+  resources:{title:'RESOURCES',sub:'Notes, exercises & materials'},
+  guidelines:{title:'SAFETY GUIDELINES',sub:'Lab rules & emergency procedures'},
+  equipment:{title:'EQUIPMENT INVENTORY',sub:'Track & purchase equipment'},
+  chemicals:{title:'CHEMICAL INVENTORY',sub:'Track & purchase chemicals'},
+  orders:{title:'PURCHASE ORDERS',sub:'Order history & procurement'},
+};
+function goto(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    if(n.getAttribute('onclick')===`goto('${page}')`) n.classList.add('active');
+  });
+  const info = pageTitles[page]||{title:page.toUpperCase(),sub:''};
+  document.getElementById('topbar-title').textContent = info.title;
+  document.getElementById('topbar-sub').textContent = info.sub;
+  document.getElementById('notif-panel').classList.remove('open');
+  document.getElementById('content').scrollTop = 0;
+}
+
+// ═══════════════════════ TABS ═══════════════════════
+function switchTab(el,group){
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ═══════════════════════ ATTENDANCE ═══════════════════════
+function renderAttendance(){
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById('att-date').value = today;
+  document.getElementById('att-date-display').textContent = new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  const grid = document.getElementById('att-grid');
+  grid.innerHTML = students.map(s=>`
+    <div class="att-card" id="att-${s.id}">
+      <div class="att-avatar">${s.emoji}</div>
+      <div class="att-name">${s.name}</div>
+      <div class="att-roll">${s.id}</div>
+      <div class="att-btns">
+        <button class="att-btn p" onclick="markAtt('${s.id}','present')">P</button>
+        <button class="att-btn a" onclick="markAtt('${s.id}','absent')">A</button>
+        <button class="att-btn l" onclick="markAtt('${s.id}','late')">L</button>
+      </div>
+    </div>
+  `).join('');
+  updateAttCounts();
+}
+function markAtt(id, status){
+  attState[id]=status;
+  const card = document.getElementById('att-'+id);
+  card.className='att-card '+status;
+  updateAttCounts();
+}
+function updateAttCounts(){
+  const vals = Object.values(attState);
+  const p = vals.filter(v=>v==='present').length;
+  const a = vals.filter(v=>v==='absent').length;
+  const l = vals.filter(v=>v==='late').length;
+  const total = students.length;
+  document.getElementById('att-p-count').textContent=p;
+  document.getElementById('att-a-count').textContent=a;
+  document.getElementById('att-l-count').textContent=l;
+  document.getElementById('att-pct').textContent=total?Math.round((p+l)/total*100)+'%':'0%';
+}
+function saveAttendance(){
+  const msg = document.createElement('div');
+  msg.style.cssText='position:fixed;top:70px;right:20px;background:var(--success);color:#000;padding:12px 20px;border-radius:10px;font-weight:600;z-index:9999;font-size:13px;animation:fadeIn .2s ease';
+  msg.textContent='✅ Attendance saved successfully!';
+  document.body.appendChild(msg);
+  setTimeout(()=>msg.remove(),3000);
+}
+function exportAttendance(){
+  const msg = document.createElement('div');
+  msg.style.cssText='position:fixed;top:70px;right:20px;background:var(--accent);color:#000;padding:12px 20px;border-radius:10px;font-weight:600;z-index:9999;font-size:13px;animation:fadeIn .2s ease';
+  msg.textContent='📥 Attendance exported as CSV!';
+  document.body.appendChild(msg);
+  setTimeout(()=>msg.remove(),3000);
+}
+
+// ═══════════════════════ CHART ═══════════════════════
+function renderChart(){
+  const max = 42;
+  document.getElementById('att-chart').innerHTML = attChartData.map(d=>{
+    const ph = Math.round(d.p/max*110);
+    const ah = Math.round(d.a/max*110);
+    return `
+      <div class="chart-bar-wrap">
+        <div class="chart-bar-val" style="color:var(--accent)">${d.p}</div>
+        <div class="chart-bar" style="height:${ph}px;background:linear-gradient(180deg,var(--accent),var(--accent2));opacity:.85" title="Present: ${d.p}"></div>
+        <div class="chart-bar-label">${d.day}</div>
+      </div>
+      <div class="chart-bar-wrap">
+        <div class="chart-bar-val" style="color:var(--danger)">${d.a}</div>
+        <div class="chart-bar" style="height:${Math.max(ah,4)}px;background:rgba(239,68,68,.6)" title="Absent: ${d.a}"></div>
+        <div class="chart-bar-label" style="opacity:0">${d.day}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ═══════════════════════ EXPERIMENTS ═══════════════════════
+const statusColors = {completed:'badge-green',active:'badge-cyan',upcoming:'badge-blue'};
+const catColors = {Organic:'badge-yellow',Inorganic:'badge-blue',Physical:'badge-cyan'};
+function renderExperiments(){
+  document.getElementById('exp-grid').innerHTML = experiments.map(e=>`
+    <div class="exp-card" onclick="viewExp('${e.num}')">
+      <div class="flex flex-between"><div class="exp-num">${e.num}</div><span class="badge ${statusColors[e.status]}">${e.status}</span></div>
+      <div class="exp-title">${e.title}</div>
+      <div class="exp-desc">${e.desc}</div>
+      <div class="flex flex-between mt-2">
+        <div class="exp-tags"><span class="badge ${catColors[e.cat]}">${e.cat}</span><span class="tag">${e.batch}</span></div>
+        <button class="btn btn-secondary btn-sm">View →</button>
+      </div>
+    </div>
+  `).join('');
+}
+function viewExp(num){
+  const e = experiments.find(x=>x.num===num);
+  if(!e)return;
+  openModal(`🔬 ${e.num} — ${e.title}`,`
+    <div class="info-box show">
+      <strong>Aim:</strong> ${e.desc}
+    </div>
+    <div class="form-row">
+      <div><div class="form-label">Category</div><span class="badge ${catColors[e.cat]}">${e.cat}</span></div>
+      <div><div class="form-label">Status</div><span class="badge ${statusColors[e.status]}">${e.status}</span></div>
+      <div><div class="form-label">Assigned To</div><span class="tag">${e.batch}</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="form-label">Materials Required</div>
+    <p class="text-sm" style="color:var(--muted2);line-height:1.7">Burette, Pipette (10ml), Conical flask (250ml), Indicator solution, Standard solution as per protocol</p>
+    <div class="divider"></div>
+    <div class="form-label">Submit Student Reports</div>
+    <textarea class="form-textarea" placeholder="Paste observation / results…"></textarea>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-primary" style="flex:1" onclick="closeGenModal()">✓ Submit Report</button>
+      <button class="btn btn-secondary" onclick="closeGenModal()">Close</button>
+    </div>
+  `);
+}
+function showAddExp(){
+  const p = document.getElementById('add-exp-panel');
+  p.style.display = p.style.display==='none'?'block':'none';
+  if(p.style.display==='block') p.scrollIntoView({behavior:'smooth'});
+}
+function addExperiment(){
+  const t = document.querySelector('#add-exp-panel .form-input').value||'New Experiment';
+  experiments.push({num:`EXP-0${experiments.length+1}`,title:t,desc:'Newly added experiment.',cat:'Organic',status:'upcoming',batch:'All'});
+  renderExperiments();
+  document.getElementById('add-exp-panel').style.display='none';
+  showToast('✅ Experiment added successfully!','success');
+}
+
+// ═══════════════════════ LESSONS ═══════════════════════
+function renderLessons(){
+  const statusMap = {done:'badge-green',active:'badge-cyan',upcoming:'badge-blue'};
+  document.getElementById('lesson-grid').innerHTML = lessons.map(l=>`
+    <div class="lesson-card">
+      <div class="lesson-thumb" style="background:${l.color}">${l.icon}</div>
+      <div class="lesson-info">
+        <div class="flex flex-between mb-2"><span class="tag">${l.unit}</span><span class="badge ${statusMap[l.status]}">${l.status}</span></div>
+        <div class="lesson-title">${l.title}</div>
+        <div class="lesson-meta">${l.duration}</div>
+        <div class="lesson-progress-wrap">
+          <div class="flex flex-between mb-2"><span class="text-sm text-muted">Progress</span><span class="font-mono text-sm">${l.progress}%</span></div>
+          <div class="progress-bar"><div class="progress-fill ${l.progress<30?'low':l.progress<70?'med':''}" style="width:${l.progress}%"></div></div>
+        </div>
+        <button class="btn btn-secondary btn-sm" style="width:100%;margin-top:8px;justify-content:center">${l.status==='done'?'📖 Review':l.status==='active'?'▶ Continue':'🔒 Upcoming'}</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════ RESOURCES ═══════════════════════
+function renderResources(){
+  document.getElementById('res-grid').innerHTML = resources.map(r=>`
+    <div class="res-card" onclick="downloadRes('${r.name}')">
+      <div class="res-icon-box" style="background:${r.color}22;border:1px solid ${r.color}44">${r.icon}</div>
+      <div class="res-info">
+        <div class="res-name">${r.name}</div>
+        <div class="res-meta">${r.type} · ${r.size} · Uploaded ${r.uploaded}</div>
+        <div style="margin-top:6px;display:flex;gap:6px">
+          <span class="tag">${r.category}</span>
+        </div>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();downloadRes('${r.name}')">📥</button>
+    </div>
+  `).join('');
+}
+function downloadRes(name){showToast(`📥 Downloading: ${name}`,'info')}
+
+// ═══════════════════════ INVENTORY ═══════════════════════
+function pctOf(qty,max){return Math.min(Math.round(qty/max*100),100)}
+function statusClass(s){return s==='critical'?'low':s==='low'?'med':''}
+function statusBadge(s){return s==='critical'?'badge-red':s==='low'?'badge-yellow':'badge-green'}
+function statusLabel(s){return s==='critical'?'Critical':s==='low'?'Low':'Adequate'}
+function qtyClass(s){return s==='critical'?'low':s==='low'?'med':'ok'}
+
+function renderEquipment(){
+  document.getElementById('equip-grid').innerHTML = equipment.map(e=>{
+    const pct = pctOf(e.qty,e.max);
+    return `
+    <div class="inv-card">
+      <div class="inv-head">
+        <div>
+          <div class="inv-name">${e.img} ${e.name}</div>
+          <div class="inv-code">${e.code}</div>
+        </div>
+        <span class="badge ${statusBadge(e.status)}">${statusLabel(e.status)}</span>
+      </div>
+      <div class="flex gap-2 mb-2">
+        <span class="inv-qty ${qtyClass(e.status)}">${e.qty}</span>
+        <span class="inv-unit">/ ${e.max} ${e.unit}</span>
+      </div>
+      <div class="inv-progress">
+        <div class="progress-bar"><div class="progress-fill ${statusClass(e.status)}" style="width:${pct}%"></div></div>
+        <div class="text-sm text-muted font-mono" style="margin-top:4px">${pct}% remaining</div>
+      </div>
+      <div class="inv-foot">
+        <button class="btn btn-secondary btn-sm">📋 Details</button>
+        <button class="btn btn-purchase btn-sm" onclick="openPurchaseModal('${e.name}','equipment')">🛒 Purchase</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+const hazardColors = {corrosive:'badge-red',flammable:'badge-yellow',oxidiser:'badge-yellow',irritant:'badge-blue',none:'badge-green'};
+function renderChemicals(){
+  document.getElementById('chem-grid').innerHTML = chemicals.map(c=>{
+    const pct = pctOf(c.qty,c.max);
+    return `
+    <div class="inv-card">
+      <div class="inv-head">
+        <div>
+          <div class="inv-name">🧪 ${c.name}</div>
+          <div class="inv-code">${c.code} · <span class="font-mono" style="color:var(--accent)">${c.formula}</span></div>
+        </div>
+        <span class="badge ${statusBadge(c.status)}">${statusLabel(c.status)}</span>
+      </div>
+      <div class="flex gap-2 mb-2" style="align-items:baseline">
+        <span class="inv-qty ${qtyClass(c.status)}">${c.qty}</span>
+        <span class="inv-unit">${c.unit} / ${c.max} ${c.unit}</span>
+      </div>
+      <div class="inv-progress">
+        <div class="progress-bar"><div class="progress-fill ${statusClass(c.status)}" style="width:${pct}%"></div></div>
+        <div class="text-sm text-muted font-mono" style="margin-top:4px">${pct}% remaining</div>
+      </div>
+      <div class="inv-foot">
+        <span class="badge ${hazardColors[c.hazard]||'badge-blue'}">⚠ ${c.hazard}</span>
+        <button class="btn btn-purchase btn-sm" onclick="openPurchaseModal('${c.name}','chemical')">🛒 Purchase</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════ PURCHASE ═══════════════════════
+function openPurchaseModal(item, type){
+  document.getElementById('purchase-item').value = item||'';
+  document.getElementById('purchase-type').value = type||'equipment';
+  document.getElementById('purchase-success').classList.remove('show');
+  document.getElementById('purchase-form').style.display='block';
+  document.getElementById('purchase-modal').classList.add('open');
+}
+function closePurchase(){
+  document.getElementById('purchase-modal').classList.remove('open');
+}
+function closePurchaseOnOverlay(e){
+  if(e.target===e.currentTarget) closePurchase();
+}
+function submitPurchase(){
+  const item = document.getElementById('purchase-item').value;
+  if(!item){alert('Please enter an item name');return;}
+  const orderId = `#ORD-00${orderCounter++}`;
+  document.getElementById('order-id').textContent = orderId;
+  // Add to orders table
+  const tbody = document.getElementById('orders-table');
+  const type = document.getElementById('purchase-type').value;
+  const qty = document.getElementById('purchase-qty').value||'—';
+  const cost = document.getElementById('purchase-cost').value;
+  const row = document.createElement('tr');
+  const today = new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  row.innerHTML = `<td class="mono">${orderId}</td><td class="fw-600">${item}</td><td><span class="badge ${type==='chemical'?'badge-blue':'badge-cyan'}">${type==='chemical'?'Chemical':'Equipment'}</span></td><td class="mono">${qty}</td><td class="mono">${cost?'₹'+Number(cost).toLocaleString('en-IN'):'—'}</td><td class="mono">${today}</td><td><span class="badge badge-yellow">Pending</span></td><td><button class="btn btn-secondary btn-sm">Track</button></td>`;
+  tbody.insertBefore(row, tbody.firstChild);
+  // Clear form
+  ['purchase-item','purchase-qty','purchase-cost','purchase-vendor','purchase-reason'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('purchase-success').classList.add('show');
+  document.getElementById('purchase-form').style.display='none';
+}
+
+// ═══════════════════════ GENERIC MODAL ═══════════════════════
+let genModal;
+function openModal(title, content){
+  if(genModal){genModal.remove()}
+  const overlay = document.createElement('div');
+  overlay.className='modal-overlay open';
+  overlay.id='gen-modal';
+  overlay.innerHTML=`
+    <div class="modal">
+      <div class="modal-head">
+        <span class="modal-title">${title}</span>
+        <div class="modal-close" onclick="closeGenModal()">✕</div>
+      </div>
+      <div class="modal-body">${content}</div>
+    </div>`;
+  overlay.onclick=e=>{if(e.target===overlay)closeGenModal()};
+  document.body.appendChild(overlay);
+  genModal=overlay;
+}
+function closeGenModal(){genModal&&genModal.remove()}
+
+// ═══════════════════════ NOTIFICATIONS ═══════════════════════
+function toggleNotif(){
+  document.getElementById('notif-panel').classList.toggle('open');
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#notif-btn')&&!e.target.closest('#notif-panel')){
+    document.getElementById('notif-panel').classList.remove('open');
+  }
+});
+
+// ═══════════════════════ TOAST ═══════════════════════
+function showToast(msg, type='info'){
+  const colors={success:'var(--success)',info:'var(--accent)',warn:'var(--accent3)',danger:'var(--danger)'};
+  const t = document.createElement('div');
+  t.style.cssText=`position:fixed;top:70px;right:20px;background:${colors[type]||colors.info};color:#000;padding:12px 20px;border-radius:10px;font-weight:600;z-index:9999;font-size:13px;animation:fadeIn .2s ease;max-width:320px`;
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3500);
+}
+
+// ═══════════════════════ SEARCH ═══════════════════════
+function handleSearch(q){
+  if(!q) return;
+  // Simple demo — navigate to relevant section
+  q=q.toLowerCase();
+  if(q.includes('attend')) goto('attendance');
+  else if(q.includes('exp')||q.includes('titrat')) goto('experiments');
+  else if(q.includes('teach')||q.includes('lesson')) goto('teaching');
+  else if(q.includes('res')||q.includes('note')) goto('resources');
+  else if(q.includes('guide')||q.includes('safe')) goto('guidelines');
+  else if(q.includes('equip')||q.includes('burette')||q.includes('beaker')) goto('equipment');
+  else if(q.includes('chem')||q.includes('acid')||q.includes('nacl')) goto('chemicals');
+  else if(q.includes('order')||q.includes('purchase')) goto('orders');
+}
+
+// ═══════════════════════ INIT ═══════════════════════
+function init(){
+  renderAttendance();
+  renderChart();
+  renderExperiments();
+  renderLessons();
+  renderResources();
+  renderEquipment();
+  renderChemicals();
+}
+init();
+</script>
+</body>
+</html>
